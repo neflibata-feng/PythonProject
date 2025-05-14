@@ -1,0 +1,54 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title mb-4">垃圾分类</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" name="file" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary">识别分类</button>
+        </form>
+
+        <div class="result-card card mt-4 d-none">
+            <div class="card-body">
+                <h5 class="card-title">识别结果</h5>
+                <div id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('uploadForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    try {
+        const response = await fetch('/classify', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        const resultCard = document.querySelector('.result-card');
+        const resultContent = document.getElementById('resultContent');
+
+        if (response.ok) {
+            resultCard.classList.remove('d-none');
+            resultContent.innerHTML = `
+                <p class="mb-1">分类结果：${result.category}</p>
+                <p class="mb-0">置信度：${(result.confidence * 100).toFixed(2)}%</p>
+            `;
+        } else {
+            resultCard.classList.remove('d-none');
+            resultContent.innerHTML = `<div class="alert alert-danger">${result.error}</div>`;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+</script>
+{% endblock %}

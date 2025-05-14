@@ -1,0 +1,32 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>gal垃圾分类系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        .container { max-width: 800px; margin-top: 50px; }
+        .result-card { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">欢迎来到gal垃圾分类系统</a>
+            <div class="d-flex">
+                {% if session.username %}
+                    <span class="navbar-text me-3">欢迎，{{ session.username }}</span>
+                    <a href="/logout" class="btn btn-outline-danger">退出</a>
+                {% else %}
+                    <a href="/login" class="btn btn-outline-primary me-2">登录</a>
+                    <a href="/register" class="btn btn-primary">注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
